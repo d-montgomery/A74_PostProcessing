@@ -80,9 +80,10 @@ def cleanup_profile_file(filepath):
 
 def main():
     # Directories to clean
+    base_dir = Path(__file__).parent
     directories = [
-        Path('/Users/dmontgo2/Library/CloudStorage/OneDrive-NREL/Projects/SAF-VTO/Ascent74/PrefVaporization-Study/Figures/profile/profile_10'),
-        Path('/Users/dmontgo2/Library/CloudStorage/OneDrive-NREL/Projects/SAF-VTO/Ascent74/PrefVaporization-Study/Figures/profile/profile_100'),
+        base_dir / 'profile_10',
+        base_dir / 'profile_100',
     ]
     
     total_cleaned = 0

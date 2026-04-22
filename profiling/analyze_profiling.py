@@ -20,7 +20,7 @@ import pandas as pd
 
 # ===== CONFIGURATION =====
 # Set timesteps to analyze: 10 or 100
-TIMESTEPS = 100
+TIMESTEPS = 10
 # =======================
 
 

@@ -3,16 +3,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 import re
+import os
 
 save_fig = True
 posf_only = False
 min_time = 55
 max_time = 60
 
-ignore_fuel = ['e2-sajf3']
 ignore_fuel = ['']
 add_line_symbols = False
 marker_size = 8
+line_w = 2.5
+fsize = 14
 
 color_scheme = 'blues' # Options: 'blues', 'purples', 'default'
 
@@ -25,12 +27,13 @@ print(f"Filtering data to z <= {max_z} m")
 vars = ['spray_density']
 var_label = {'spray_mass': 'Total Spray Mass', 'spray_vol':'Total Spray Volume', 'spray_density':'Spray Density'}
 
-fsize = 16
+
 # Get all integrated CSV files
+
 if min_time == max_time:
-    data_dir = Path(f'data_paraview_integrals_{min_time}ms')
+    data_dir = Path(__file__).parent / f'data_paraview_integrals_{min_time}ms'
 else:
-    data_dir = Path(f'data_paraview_integrals_{min_time}ms-{max_time}ms')
+    data_dir = Path(__file__).parent / f'data_paraview_integrals_{min_time}ms-{max_time}ms'
 csv_files = sorted(data_dir.glob('integrated_*.csv'))
 
 print(f"Found {len(csv_files)} integrated CSV files")
@@ -70,18 +73,23 @@ def linespecs(name):
                 lab+=": HyChem-to-HyChem"
                 color="#333333"
                 line_style=":"
+        else:
+            line_style="-."
     elif ("E1-SSJF2".lower() in name):
         if color_scheme == 'blues':
             color="#2980B9"
         else:
             color="tab:orange"
         lab="DLR FT Blend"
+        line_style=":"
     elif ("E2-SAJF3".lower() in name):
         color="#91BCD8"
         lab="DLR HEFA Blend"
+        line_style="--"
     elif ("we-hefa" in name):
         color="#063C61"
         lab="HEFA"
+        line_style="-"
     else:
         color="black"
         lab=""
@@ -202,7 +210,7 @@ for var in vars:
         
         marker = data['marker'] if add_line_symbols else None
         markersize = marker_size if add_line_symbols else 8
-        ax.plot(z_scaled, values_sorted, data['line_style'], color=data['color'], linewidth=2, marker=marker, markersize=markersize, label=fuel_label)
+        ax.plot(z_scaled, values_sorted, data['line_style'], color=data['color'], linewidth=line_w, marker=marker, markersize=markersize, label=fuel_label)
 
     ax.set_xlabel('Distance from Inlet (cm)', fontsize=fsize)
     ax.set_ylabel(f'Normalized {var_label[var]}', fontsize=fsize)
@@ -220,6 +228,6 @@ for var in vars:
     filename += '.png'
     plt.tight_layout()
     if save_fig:
-        plt.savefig(filename, dpi=150, bbox_inches='tight')
+        plt.savefig(Path(__file__).parent / filename, dpi=150, bbox_inches='tight')
         print(f"\nPlot saved: {filename}")
     plt.show()
