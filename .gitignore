@@ -1,3 +1,4 @@
 *.out
 *.png
 *.csv
+.DS_Store
